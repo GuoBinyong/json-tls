@@ -48,7 +48,8 @@
     "typescript": "^3.8.3"
   },
   "dependencies": {
-    "type-reviver": "^1.0.0",
+    "type-reviver": "file:../type-reviver",
+    "type-reviver-json": "file:../type-reviver-json",
     "type-tls": "^2.0.1"
   }
 }
