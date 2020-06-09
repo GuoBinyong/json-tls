@@ -1,6 +1,5 @@
 import {getExactTypeNameOf,isBaseType} from "type-tls";
-import {TypeRevivers, flatParseTypeRevivers, TypeReviverMap} from "type-reviver"
-import {TypeReviversOptions} from "./deepCopy";
+import {TypeRevivers, flatParseTypeRevivers, TypeReviverMap, mergeTypeRevivers} from "type-reviver"
 import {typeReviverArray} from "type-reviver-json"
 
 
@@ -76,11 +75,6 @@ const _defaultMark = "__MarKOfCustomJSON__";
 
 
 
-const defaultPresetTypeReviverMap:TypeReviverMap<Reviver> = new Map(typeReviverArray);
-
-
-
-
 
 export function createCustomJSONStringify(presetTypeReviverMap?:TypeReviverMap<Reviver>):CustomJSONStringify {
 
@@ -90,12 +84,13 @@ export function createCustomJSONStringify(presetTypeReviverMap?:TypeReviverMap<R
      * @param typeRevivers?:TypeRevivers|null    定义 类型 与 其对类的 自定义序列化函数；
      * @param options:JSONStringifyOptions    选项
      */
-    function customJSONStringify<Revr extends Reviver>(value: any, typeRevivers?:TypeRevivers<Revr>|null,options:JSONStringifyOptions = {}):string {
+     function customJSONStringify<Revr extends Reviver>(value: any, typeRevivers?:TypeRevivers<Revr>|null,options:JSONStringifyOptions = {}):string {
 
         try {
-
-            if  (typeRevivers){
-                var parseInfo =  flatParseTypeRevivers(typeRevivers);
+            let presetTRMap = customJSONStringify.presetTypeReviverMap;
+            if  (typeRevivers || presetTRMap.size > 0){
+                let mergedTRArr = mergeTypeRevivers(presetTRMap,typeRevivers);
+                var parseInfo =  flatParseTypeRevivers(mergedTRArr);
                 let disDefaultArr = parseInfo.typeFun;
 
                 //禁用toJSON
@@ -241,19 +236,6 @@ export function createCustomJSONStringify(presetTypeReviverMap?:TypeReviverMap<R
 
 
 
-/**
- * 自定义JSON序列化；可根据数据类型来自定义序列化方案； 给合  customJSONParse  可实现对任意类型的数据 进行序列化 并完整（无信息丢失）还原；
- * @param value: any   被序列化的对象
- * @param typeRevivers?:TypeRevivers|null    定义 类型 与 其对类的 自定义序列化函数；
- * @param options:JSONStringifyOptions    选项
- */
-export const customJSONStringify:CustomJSONStringify = createCustomJSONStringify(defaultPresetTypeReviverMap);
-
-
-
-
-
-
 
 
 
@@ -297,8 +279,10 @@ export function createCustomJSONParse(presetTypeReviverMap?:TypeReviverMap<Reviv
 
         let lostRevier = options.lostRevier || LostRevier.parse ;
 
-        if (typeRevivers) {
-            let parseInfo = flatParseTypeRevivers(typeRevivers);
+        let presetTRMap = customJSONParse.presetTypeReviverMap;
+        if (typeRevivers || presetTRMap.size > 0) {
+            let mergedTRArr = mergeTypeRevivers(presetTRMap,typeRevivers);
+            let parseInfo = flatParseTypeRevivers(mergedTRArr);
             var trObj = parseInfo.trObject;
         }
 
@@ -379,17 +363,6 @@ export function createCustomJSONParse(presetTypeReviverMap?:TypeReviverMap<Reviv
 
 
 
-/**
- * 自定义JSON解析；可根据类型自定义解析逻辑；
- * @param text
- * @param typeRevivers
- * @param options
- */
-export const customJSONParse:CustomJSONParse = createCustomJSONParse(defaultPresetTypeReviverMap);
-
-
-
-
 
 export interface CustomJSON {
     stringify:CustomJSONStringify,
@@ -408,3 +381,36 @@ function createCustomJSON(presetTypeReviverMap?:TypeReviverMap<Reviver>):CustomJ
         parse:createCustomJSONParse(presetTypeReviverMap)
     };
 }
+
+
+
+
+/**
+ * 默认预置的TypeReviverMap
+ */
+const defaultPresetTypeReviverMap:TypeReviverMap<Reviver> = new Map(typeReviverArray);
+
+
+
+
+/**
+ * 自定义JSON序列化；可根据数据类型来自定义序列化方案； 给合  customJSONParse  可实现对任意类型的数据 进行序列化 并完整（无信息丢失）还原；
+ * @param value: any   被序列化的对象
+ * @param typeRevivers?:TypeRevivers|null    定义 类型 与 其对类的 自定义序列化函数；
+ * @param options:JSONStringifyOptions    选项
+ */
+export const customJSONStringify:CustomJSONStringify = createCustomJSONStringify(defaultPresetTypeReviverMap);
+
+
+
+
+
+
+/**
+ * 自定义JSON解析；可根据类型自定义解析逻辑；
+ * @param text
+ * @param typeRevivers
+ * @param options
+ */
+export const customJSONParse:CustomJSONParse = createCustomJSONParse(defaultPresetTypeReviverMap);
+

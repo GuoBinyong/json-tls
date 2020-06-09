@@ -65,7 +65,7 @@ export function createDeepCopyByJSONWith(presetTypeReviverMap?:TypeReviverMap<Re
      * @param value
      * @param dcTypeRevivers
      */
-    let deepCopyByJSON:DeepCopyByJSON = function <T>(value:T,typeReviversOpts?:TypeReviversOptions|null):T {
+    function deepCopyByJSON<T>(value:T,typeReviversOpts?:TypeReviversOptions|null):T {
         if (isBaseType(value)){
             return value;
         }
@@ -98,7 +98,7 @@ export function createDeepCopyByJSONWith(presetTypeReviverMap?:TypeReviverMap<Re
 
         var str = customJSONStringify(value,strAllTRArr);
         return customJSONParse(str,parseAllTRArr);
-    } as DeepCopyByJSON
+    }
 
 
     Object.defineProperty(deepCopyByJSON,"presetTypeReviverMap",{
