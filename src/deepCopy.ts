@@ -1,6 +1,5 @@
 import {
-    customJSONStringify,
-    customJSONParse,
+    createCustomJSON,
     Reviver,
     PresetTypeReviverMap
 } from "./customJSON";
@@ -43,14 +42,18 @@ export type TypeReviversOptions = TypeRevivers<Reviver> | TypeReviversPair
 
 
 
-
-
-
-
-
 export interface DeepCopyByJSON extends PresetTypeReviverMap{
     <T>(value:T,typeReviversOpts?:TypeReviversOptions|null):T;
 }
+
+
+
+/**
+ * 创建纯净的 customJSON
+ */
+const customJSON = createCustomJSON();
+
+
 
 
 
@@ -96,8 +99,8 @@ export function createDeepCopyByJSONWith(presetTypeReviverMap?:TypeReviverMap<Re
 
         }
 
-        var str = customJSONStringify(value,strAllTRArr);
-        return customJSONParse(str,parseAllTRArr);
+        var str = customJSON.stringify(value,strAllTRArr);
+        return customJSON.parse(str,parseAllTRArr);
     }
 
 

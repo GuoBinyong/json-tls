@@ -375,7 +375,7 @@ export interface CustomJSON {
 
 
 
-function createCustomJSON(presetTypeReviverMap?:TypeReviverMap<Reviver>):CustomJSON {
+export function createCustomJSON(presetTypeReviverMap?:TypeReviverMap<Reviver>):CustomJSON {
     return {
         stringify:createCustomJSONStringify(presetTypeReviverMap),
         parse:createCustomJSONParse(presetTypeReviverMap)
