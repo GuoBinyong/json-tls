@@ -1,65 +1,16 @@
 import {getExactTypeNameOf,isBaseType} from "type-tls";
-import {TypeRevivers, flatParseTypeRevivers, TypeReviverMap, mergeTypeRevivers} from "type-reviver"
-import {typeReviverArray} from "type-reviver-json"
-
-
-
-// customJSONStringify 专用的 Revr
-export type StringifyReviver = (this: any, key: string,value: any,type:string ,callCount:number,stringifyOptions:StringifyReviverOptions) => any;
-
-// customJSONParse 专用的 Reviver
-export type ParseReviver = (this: any, key: string,value: any,type:string,callCount:number) => any;
-
-// customJSONStringify 和 customJSONParse 都可用的 Reviver
-export type SPReviver = (this: any, key: string,value: any,type:string ,callCount:number ,stringifyOptions:StringifyReviverOptions|undefined) => any;
-
-
-export type Reviver = SPReviver | StringifyReviver | ParseReviver | ReviverPair
-
-
-
-
-export interface ReviverPair {
-    string:StringifyReviver;
-    parse:ParseReviver;
-}
-
-
-
-
-//ReviverPair 的类型守卫
-export function isReviverPair(target:any):target is ReviverPair {
-    return target && typeof target.string === "function" && typeof target.parse === "function"
-}
+import {TypeRevivers, flatParseTypeRevivers, TypeReviverMap, PresetTypeReviverMap, mergeTypeRevivers} from "type-reviver"
+import {typeReviverArray} from "./revivers"
+import {StringifyReviver,ParseReviver,ReviverPair,Reviver,JSONStringifyOptions} from "./public"
 
 
 
 
 
 
-export interface StringifyReviverOptions {
-    skip?:boolean;
-    skipMark?:boolean;
-    skipRootMark?:boolean;   //是否跳过 顶层的 标记
-}
 
 
-
-export interface JSONStringifyOptions extends StringifyReviverOptions{
-    skipRoot?:boolean;   //是否跳过 顶层的 自定义操作
-    space?: string | number;
-    mark?:string | null ;   //类型标记
-}
-
-
-
-
-export interface PresetTypeReviverMap {
-    presetTypeReviverMap:TypeReviverMap<Reviver>;  //预置的 TypeReviverMap
-}
-
-
-export interface CustomJSONStringify extends PresetTypeReviverMap{
+export interface CustomJSONStringify extends PresetTypeReviverMap<Reviver>{
     <Revr extends Reviver>(value: any, typeRevivers?:TypeRevivers<Revr>|null,options?:JSONStringifyOptions):string;
 }
 
@@ -239,7 +190,7 @@ export function createCustomJSONStringify(presetTypeReviverMap?:TypeReviverMap<R
 
 
 
-export interface CustomJSONParse extends PresetTypeReviverMap{
+export interface CustomJSONParse extends PresetTypeReviverMap<Reviver>{
     <Revr extends Reviver>(text: string, typeRevivers?:TypeRevivers<Revr>|null ,options?:JSONParseOptions):any;
 }
 

@@ -1,14 +1,8 @@
-import {
-    createCustomJSON,
-    Reviver,
-    PresetTypeReviverMap
-} from "./customJSON";
-
-import {TypeReviverMap,toTypeReviverArray,TypeRevivers} from "type-reviver";
-
+import {createCustomJSON} from "./customJSON";
+import {Reviver} from "./public"
+import {TypeReviverMap,toTypeReviverArray,TypeRevivers,PresetTypeReviverMap} from "type-reviver";
 import {isBaseType} from "type-tls";
-
-import {typeReviverArray} from "type-reviver-json"
+import {typeReviverArray} from "./revivers"
 
 
 
@@ -42,7 +36,7 @@ export type TypeReviversOptions = TypeRevivers<Reviver> | TypeReviversPair
 
 
 
-export interface DeepCopyByJSON extends PresetTypeReviverMap{
+export interface DeepCopyByJSON extends PresetTypeReviverMap<Reviver>{
     <T>(value:T,typeReviversOpts?:TypeReviversOptions|null):T;
 }
 
@@ -137,7 +131,7 @@ export function createDeepCopyByJSONWith(presetTypeReviverMap?:TypeReviverMap<Re
 
 
 
-const defaultPresetTypeReviverMap:TypeReviverMap<Reviver> = new Map(typeReviverArray);
+export const defaultPresetTypeReviverMap:TypeReviverMap<Reviver> = new Map(typeReviverArray);
 
 
 
