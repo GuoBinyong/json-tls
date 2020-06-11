@@ -1,5 +1,6 @@
 import type {StringifyReviverOptions,ReviverPair} from "./public";
 import type {TypeReviverArray} from "type-reviver"
+import {createFunctionBy} from "com-tools"
 
 
 // Date ----------
@@ -163,16 +164,8 @@ export function Function_ParseReviver(key: string,value: any,type:string,callCou
     /*
     考虑到安全和性能的原因，弃用 eval，改用 Function；
     */
-    let {source,name} = value;
-    //判断函数代码是否是匿名函数
-    let hasName = /function\s+[A-Za-z_$]+[\w$]*\s*\(/.test(source);
 
-    if (!hasName && /^[A-Za-z_$]+[\w$]*$/.test(name)){ // 当 函数代码是匿名函数 且 name 是有效的标识符
-        var funBody = `"use strict"; var ${name} = ${source} ; return ${name}`;
-    }else {
-        funBody = `"use strict"; return (${source})`;
-    }
-    return (new Function(funBody))();
+    return createFunctionBy(value.source,value.name,true);
 
     /*
     匿名函数 不能用于 函数声明，只能用于函数表达式；

@@ -1,7 +1,7 @@
 {
   "name": "json-tls",
   "version": "1.0.5",
-  "description": "json-tls 提供了JSON相关的工具，如:customJSONStringify、customJSONParse 等",
+  "description": "json-tls 提供了JSON相关的工具，如:customJSONStringify、customJSONParse、deepCopyByJSON 等",
   "main": "dist/json-tls.cjs.js",
   "module": "dist/json-tls.es.js",
   "types": "dist/index.d.ts",
@@ -47,6 +47,7 @@
     "typescript": "^3.8.3"
   },
   "dependencies": {
+    "com-tools": "^2.0.0",
     "type-reviver": "^1.0.2",
     "type-tls": "^2.0.1"
   }
