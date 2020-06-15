@@ -24,6 +24,10 @@ export interface CustomJSONStringify extends PresetTypeReviverMap<Reviver>{
 const _defaultMark = "__MarKOfCustomJSON__";
 
 
+/**
+ * 默认 Revier 的 TypeName
+ */
+export const typeNameOfDefaultRevier = "default";
 
 
 
@@ -75,6 +79,12 @@ export function createCustomJSONStringify(presetTypeReviverMap?:TypeReviverMap<R
 
                     let callCount = 0;  // stringifyReviver 的调用次数
 
+
+
+                    const defaultTypeName = typeNameOfDefaultRevier;
+                    const defaultRevier = trObj[defaultTypeName];
+                    const defaultRevierFun:StringifyReviver = (defaultRevier && typeof defaultRevier === "object") ? (<ReviverPair>defaultRevier).string : <StringifyReviver>defaultRevier ;
+
                     let stringifyReviver = function (this: any, key: string, value: any) {
                         ++callCount;
 
@@ -96,7 +106,13 @@ export function createCustomJSONStringify(presetTypeReviverMap?:TypeReviverMap<R
                         let revierFun:StringifyReviver = (revier && typeof revier === "object") ? (<ReviverPair>revier).string : <StringifyReviver>revier ;
 
                         if (!revierFun){
-                            return value;
+                            if (defaultRevierFun){
+                                typeName = defaultTypeName;
+                                revier = defaultRevier;
+                                revierFun = defaultRevierFun ;
+                            }else {
+                                return value;
+                            }
                         }
 
                         let rerOpts = Object.assign({},opts);
