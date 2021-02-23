@@ -152,6 +152,7 @@ export function createCustomJSONStringify(presetTypeReviverMap?:TypeReviverMap<R
                 jsonStr = JSON.stringify(value,null,options.space);
             }
 
+            // eslint-disable-next-line no-useless-catch
         }catch (e) {
             throw e;
         }finally {
@@ -163,6 +164,7 @@ export function createCustomJSONStringify(presetTypeReviverMap?:TypeReviverMap<R
             }
 
             // @ts-ignore
+            // eslint-disable-next-line no-unsafe-finally
             return jsonStr;
         }
     }

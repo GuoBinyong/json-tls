@@ -17,7 +17,7 @@ export function Date_StringifyReviver(key: string,value: any,type:string ,callCo
 }
 
 //ParseReviver
-export function Date_ParseReviver(key: string,value: any,type:string,callCount:number) {
+export function Date_ParseReviver(key: string,value: any) {
     return new Date(value);
 }
 
@@ -43,7 +43,7 @@ export function Map_StringifyReviver(key: string,value: any,type:string ,callCou
 }
 
 //ParseReviver
-export function Map_ParseReviver(key: string,value: any,type:string,callCount:number) {
+export function Map_ParseReviver(key: string,value: any) {
     return new Map(value);
 }
 
@@ -70,7 +70,7 @@ export function Set_StringifyReviver(key: string,value: any,type:string ,callCou
 }
 
 //ParseReviver
-export function Set_ParseReviver(key: string,value: any,type:string,callCount:number) {
+export function Set_ParseReviver(key: string,value: any) {
     return new Set(value);
 }
 
@@ -98,7 +98,7 @@ export function URL_StringifyReviver(key: string,value: any,type:string ,callCou
 }
 
 //ParseReviver
-export function URL_ParseReviver(key: string,value: any,type:string,callCount:number) {
+export function URL_ParseReviver(key: string,value: any) {
     return new URL(value);
 }
 
@@ -129,7 +129,7 @@ export function RegExp_StringifyReviver(key: string,value:any,type:string ,callC
 }
 
 //ParseReviver
-export function RegExp_ParseReviver(key: string,value: any,type:string,callCount:number) {
+export function RegExp_ParseReviver(key: string,value: any) {
     let {source,flags} = value;
     let reg = new RegExp(source,flags);
     return reg;
@@ -160,7 +160,7 @@ export function Function_StringifyReviver(key: string,value:any,type:string ,cal
 }
 
 //ParseReviver
-export function Function_ParseReviver(key: string,value: any,type:string,callCount:number) {
+export function Function_ParseReviver(key: string,value: any) {
     /*
     考虑到安全和性能的原因，弃用 eval，改用 Function；
     */
@@ -189,6 +189,8 @@ export const typeReviverArray:TypeReviverArray<ReviverPair> = [
     [URL,{string:URL_StringifyReviver, parse:URL_ParseReviver}],
     [RegExp,{string:RegExp_StringifyReviver, parse:RegExp_ParseReviver}],
     [Function,{string:Function_StringifyReviver, parse:Function_ParseReviver}],
+    ["AsyncFunction",{string:Function_StringifyReviver, parse:Function_ParseReviver}],
+    ["GeneratorFunction",{string:Function_StringifyReviver, parse:Function_ParseReviver}]
 ];
 
 export default typeReviverArray;
