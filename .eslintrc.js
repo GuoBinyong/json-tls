@@ -33,7 +33,7 @@ module.exports = {
         // typescript 的 无用变量
         "@typescript-eslint/no-unused-vars": "error",
         // 优先 const
-        "prefer-const":"warn",
+        // "prefer-const":"warn",
         "no-extra-semi":"warn",
     }
 };
